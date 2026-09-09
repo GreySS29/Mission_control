@@ -18,7 +18,7 @@ void AppState::setTemperature(double value) {
     temperature_c_ = value;
 }
 
-nlohmann::json AppState::snapshot() const {
+nlohmann::json AppState::snapshot() const { // {"temperature_c": 20.0}
     std::lock_guard<std::mutex> lock(mutex_);
     nlohmann::json j;
     j["temperature_c"] = temperature_c_;
