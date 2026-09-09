@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/Rpi_block.dir/link.d CMakeFiles/Rpi_block.dir/src/main.cpp.o -o Rpi_block
