@@ -3,7 +3,7 @@
 #include <chrono>
 #include <thread>
 #include "app_state.h"
-#include "websocket_server.hpp"
+#include "../include/websocket_server.h"
 #include <boost/asio.hpp>
 
 int main() {
@@ -13,12 +13,11 @@ int main() {
     boost::asio::io_context io;
 
     WebSocketServer ws(io,8080);
-    ws.ru()
+    ws.run();
 
-    
+   
     for (int i = 0; i < 10; ++i) {
-        temperature += 0.5;
-        state.setTemperature(temperature);
+        state.setTemperature(state.get_temperature() + 0.5);
     
 
    nlohmann::json j = state.snapshot();

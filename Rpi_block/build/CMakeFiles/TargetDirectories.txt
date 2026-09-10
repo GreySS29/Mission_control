@@ -1,3 +1,5 @@
 /home/greys/Documents/Doc/C+/my_progect/Mission_control/Rpi_block/build/CMakeFiles/Rpi_block.dir
 /home/greys/Documents/Doc/C+/my_progect/Mission_control/Rpi_block/build/CMakeFiles/edit_cache.dir
 /home/greys/Documents/Doc/C+/my_progect/Mission_control/Rpi_block/build/CMakeFiles/rebuild_cache.dir
+/home/greys/Documents/Doc/C+/my_progect/Mission_control/Rpi_block/build/json-build/CMakeFiles/edit_cache.dir
+/home/greys/Documents/Doc/C+/my_progect/Mission_control/Rpi_block/build/json-build/CMakeFiles/rebuild_cache.dir

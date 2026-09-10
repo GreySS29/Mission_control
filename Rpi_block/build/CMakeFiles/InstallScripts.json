@@ -1,7 +1,8 @@
 {
 	"InstallScripts" : 
 	[
-		"/home/greys/Documents/Doc/C+/my_progect/Mission_control/Rpi_block/build/cmake_install.cmake"
+		"/home/greys/Documents/Doc/C+/my_progect/Mission_control/Rpi_block/build/cmake_install.cmake",
+		"/home/greys/Documents/Doc/C+/my_progect/Mission_control/Rpi_block/build/json-build/cmake_install.cmake"
 	],
 	"Parallel" : false
 }

@@ -87,14 +87,14 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/greys/Documents/Doc/C+/my_progect/Mission_control/Rpi_block/build/CMakeFiles /home/greys/Documents/Doc/C+/my_progect/Mission_control/Rpi_block/build//CMakeFiles/progress.marks
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
+	cd /home/greys/Documents/Doc/C+/my_progect/Mission_control/Rpi_block/build && $(CMAKE_COMMAND) -E cmake_progress_start /home/greys/Documents/Doc/C+/my_progect/Mission_control/Rpi_block/build/CMakeFiles /home/greys/Documents/Doc/C+/my_progect/Mission_control/Rpi_block/build/json-build//CMakeFiles/progress.marks
+	cd /home/greys/Documents/Doc/C+/my_progect/Mission_control/Rpi_block/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 json-build/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/greys/Documents/Doc/C+/my_progect/Mission_control/Rpi_block/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 clean
+	cd /home/greys/Documents/Doc/C+/my_progect/Mission_control/Rpi_block/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 json-build/clean
 .PHONY : clean
 
 # The main clean target
@@ -103,55 +103,18 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 preinstall
+	cd /home/greys/Documents/Doc/C+/my_progect/Mission_control/Rpi_block/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 json-build/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 preinstall
+	cd /home/greys/Documents/Doc/C+/my_progect/Mission_control/Rpi_block/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 json-build/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	$(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/greys/Documents/Doc/C+/my_progect/Mission_control/Rpi_block/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
-
-#=============================================================================
-# Target rules for targets named Rpi_block
-
-# Build rule for target.
-Rpi_block: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Rpi_block
-.PHONY : Rpi_block
-
-# fast build rule for target.
-Rpi_block/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Rpi_block.dir/build.make CMakeFiles/Rpi_block.dir/build
-.PHONY : Rpi_block/fast
-
-src/main.o: src/main.cpp.o
-.PHONY : src/main.o
-
-# target to build an object file
-src/main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Rpi_block.dir/build.make CMakeFiles/Rpi_block.dir/src/main.cpp.o
-.PHONY : src/main.cpp.o
-
-src/main.i: src/main.cpp.i
-.PHONY : src/main.i
-
-# target to preprocess a source file
-src/main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Rpi_block.dir/build.make CMakeFiles/Rpi_block.dir/src/main.cpp.i
-.PHONY : src/main.cpp.i
-
-src/main.s: src/main.cpp.s
-.PHONY : src/main.s
-
-# target to generate assembly for a file
-src/main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Rpi_block.dir/build.make CMakeFiles/Rpi_block.dir/src/main.cpp.s
-.PHONY : src/main.cpp.s
 
 # Help Target
 help:
@@ -161,10 +124,6 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... Rpi_block"
-	@echo "... src/main.o"
-	@echo "... src/main.i"
-	@echo "... src/main.s"
 .PHONY : help
 
 
@@ -176,6 +135,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	$(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/greys/Documents/Doc/C+/my_progect/Mission_control/Rpi_block/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

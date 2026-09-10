@@ -7,6 +7,8 @@ class AppState {
 public:
     void setTemperature(double value);
     nlohmann::json snapshot() const;
+    double get_temperature () const { return temperature_c_;};
+    
 
 private:
     mutable std::mutex mutex_;
