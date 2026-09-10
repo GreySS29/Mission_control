@@ -1,1 +1,8 @@
 external_lib/
+build/
+bin/
+obj/
+*.o
+CMakeFiles/
+CMakeCache.txt
+Makefile
