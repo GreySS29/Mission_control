@@ -1,0 +1,2 @@
+Termux:
+pkg install clang cmake ninja pkg-config libusb  (**libasio, spdlog)
