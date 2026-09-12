@@ -3,3 +3,24 @@ https://github.com/nlohmann/json
 #include <boost/asio.hpp>
 https://www.boost.org/doc/libs/latest/doc/html/boost_asio/reference.html
 https://www.boost.org/doc/libs/latest/libs/beast/doc/html/beast/quickref.html
+
+
+#include <RF24/RF24.h>
+#include <cstdio>
+#include <cstring>
+#include <unistd.h>
+
+
+
+pins
+
+nRF24           Rpi
+VCC             3.3v
+(capacitor)
+GND             gnd
+CSN             GPIO22(15)
+CE              GPIO7(CE1)(26)
+MOSI            GPIO10(19)
+SCK             GPIO11(23)
+MISO            GPIO9(21)
+

@@ -1,0 +1,38 @@
+pins
+
+nRF24           Nano
+VCC             3.3v
+(capacitor)
+GND             gnd
+CSN             D10
+CE              D9
+MOSI            D11
+SCK             D13
+MISO            D12
+
+
+LCD(display)
+VCC             5V
+GND             gnd
+SDA             A4
+SCL             A5
+
+
+
+
+
+
+
+
+
+
+
+
+
+library:
+#include <SPI.h>
+#include <RF24.h>
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+#include <nRF24L01.h>
+#include <printf.h> 
