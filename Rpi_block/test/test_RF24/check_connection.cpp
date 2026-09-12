@@ -3,8 +3,8 @@
 #include <cstring>
 #include <unistd.h>
 
-#define CE_PIN  25
-#define CSN_PIN 8 
+#define CE_PIN  22
+#define CSN_PIN 1
 
 RF24 radio(CE_PIN, CSN_PIN);
 
