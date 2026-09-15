@@ -1,4 +1,4 @@
-#include <pigpio.h>
+#include <lgpio.h>
 #include <iostream>
 #include <atomic>
 #include <thread>
@@ -8,66 +8,59 @@
 const int BTN1_PIN = 17;
 const int BTN2_PIN = 27;
 
-// Rotary encoder 
+// Rotary encoder
 const int ENC_CLK  = 5;
 const int ENC_DT   = 6;
 const int ENC_SW   = 13;
 
+int chip_handle;
 std::atomic<int> encoder_count{0};
 int last_clk_level = 1;
 
-void buttonCallback(int gpio, int level, int tick) {
+void gpioCallback(int chip, int gpio, int level, uint64_t tick, void *userdata) {
+    if (gpio == ENC_CLK) {
+        int clk = level;
+        int dt  = lgGpioRead(chip_handle, ENC_DT);
+
+        if (clk != last_clk_level) {
+            if (clk != dt) {
+                encoder_count++;
+                std::cout << "Encoder: " << encoder_count.load() << " (CW)\n";
+            } else {
+                encoder_count--;
+                std::cout << "Encoder: " << encoder_count.load() << " (CCW)\n";
+            }
+        }
+        last_clk_level = clk;
+        return;
+    }
+
+    // Buttons (и SW энкодера)
     if (level == 0) {
         std::cout << "Button on GPIO " << gpio << " pressed\n";
     }
 }
 
-void encoderCallback(int gpio, int level, int tick) {
-    if (gpio != ENC_CLK) return;
-
-    int clk = level;
-    int dt  = gpioRead(ENC_DT);
-
-    if (clk != last_clk_level) {
-        if (clk != dt) {
-            encoder_count++;
-            std::cout << "Encoder: " << encoder_count.load() << " (CW)\n";
-        } else {
-            encoder_count--;
-            std::cout << "Encoder: " << encoder_count.load() << " (CCW)\n";
-        }
-    }
-    last_clk_level = clk;
-}
-
 int main() {
-    if (gpioInitialise() < 0) {
-        std::cerr << "Failed to initialize pigpio\n";
+    chip_handle = lgGpiochipOpen(0);
+    if (chip_handle < 0) {
+        std::cerr << "Failed to open gpiochip\n";
         return 1;
     }
 
     // Buttons
-    gpioSetMode(BTN1_PIN, PI_INPUT);
-    gpioSetPullUpDown(BTN1_PIN, PI_PUD_UP);
+    lgGpioClaimAlert(chip_handle, LG_SET_PULL_UP, LG_BOTH_EDGES, BTN1_PIN, -1);
+    lgGpioClaimAlert(chip_handle, LG_SET_PULL_UP, LG_BOTH_EDGES, BTN2_PIN, -1);
+    lgGpioClaimAlert(chip_handle, LG_SET_PULL_UP, LG_BOTH_EDGES, ENC_SW,  -1);
 
-    gpioSetMode(BTN2_PIN, PI_INPUT);
-    gpioSetPullUpDown(BTN2_PIN, PI_PUD_UP);
+    // Encoder DT — просто вход, читаем по запросу
+    lgGpioClaimInput(chip_handle, LG_SET_PULL_UP, ENC_DT);
 
-    // Encoder
-    gpioSetMode(ENC_CLK, PI_INPUT);
-    gpioSetPullUpDown(ENC_CLK, PI_PUD_UP);
+    // Encoder CLK — с алертом
+    lgGpioClaimAlert(chip_handle, LG_SET_PULL_UP, LG_BOTH_EDGES, ENC_CLK, -1);
 
-    gpioSetMode(ENC_DT, PI_INPUT);
-    gpioSetPullUpDown(ENC_DT, PI_PUD_UP);
-
-    gpioSetMode(ENC_SW, PI_INPUT);
-    gpioSetPullUpDown(ENC_SW, PI_PUD_UP);
-
-    // Callbacks
-    gpioSetAlertFunc(BTN1_PIN, buttonCallback);
-    gpioSetAlertFunc(BTN2_PIN, buttonCallback);
-    gpioSetAlertFunc(ENC_SW,  buttonCallback);
-    gpioSetAlertFunc(ENC_CLK, encoderCallback);
+    // Единый callback на все линии этого чипа
+    lgGpioSetSamplesFunc(gpioCallback, nullptr);
 
     std::cout << "Monitoring GPIO. Press Ctrl+C to exit.\n";
     std::cout << "Buttons: GPIO " << BTN1_PIN << ", " << BTN2_PIN << "\n";
@@ -77,6 +70,6 @@ int main() {
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
     }
 
-    gpioTerminate();
+    lgGpiochipClose(chip_handle);
     return 0;
 }
