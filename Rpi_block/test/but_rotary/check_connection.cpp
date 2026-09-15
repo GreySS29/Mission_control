@@ -23,30 +23,24 @@ void gpioCallback(int num_alerts, lgGpioAlert_p alerts, void *userdata) {
         int gpio  = alerts[i].report.gpio;
         int level = alerts[i].report.level;
 
-        if (gpio == ENC_CLK) {
-            int clk = level;
-            int dt  = lgGpioRead(chip_handle, ENC_DT);
+       if (gpio == ENC_CLK) {
+    if (level != 1) continue;   
 
-            if (clk != last_clk_level) {
-                if (clk != dt) {
-                    if (encoder_count < ENC_MAX) {
-                        encoder_count++;
-                        std::cout << "Encoder: " << encoder_count.load() << " (CW)\n";
-                    } else {
-                        std::cout << "Encoder: " << encoder_count.load() << " (max reached)\n";
-                    }
-                } else {
-                    if (encoder_count > ENC_MIN) {
-                        encoder_count--;
-                        std::cout << "Encoder: " << encoder_count.load() << " (CCW)\n";
-                    } else {
-                        std::cout << "Encoder: " << encoder_count.load() << " (min reached)\n";
-                    }
-                }
-            }
-            last_clk_level = clk;
-            continue;
+    int dt = lgGpioRead(chip_handle, ENC_DT);
+
+    if (dt == 0) {
+        if (encoder_count < ENC_MAX) {
+            encoder_count++;
+            std::cout << "Encoder: " << encoder_count.load() << " (CW)\n";
         }
+    } else {
+        if (encoder_count > ENC_MIN) {
+            encoder_count--;
+            std::cout << "Encoder: " << encoder_count.load() << " (CCW)\n";
+        }
+    }
+    continue;
+}
 
         if (level == 0) {
             std::cout << "Button on GPIO " << gpio << " pressed\n";
