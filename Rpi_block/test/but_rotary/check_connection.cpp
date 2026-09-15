@@ -15,6 +15,9 @@ int chip_handle;
 std::atomic<int> encoder_count{0};
 int last_clk_level = 1;
 
+const int ENC_MIN = -90;
+const int ENC_MAX = 90;
+
 void gpioCallback(int num_alerts, lgGpioAlert_p alerts, void *userdata) {
     for (int i = 0; i < num_alerts; i++) {
         int gpio  = alerts[i].report.gpio;
@@ -26,11 +29,19 @@ void gpioCallback(int num_alerts, lgGpioAlert_p alerts, void *userdata) {
 
             if (clk != last_clk_level) {
                 if (clk != dt) {
-                    encoder_count++;
-                    std::cout << "Encoder: " << encoder_count.load() << " (CW)\n";
+                    if (encoder_count < ENC_MAX) {
+                        encoder_count++;
+                        std::cout << "Encoder: " << encoder_count.load() << " (CW)\n";
+                    } else {
+                        std::cout << "Encoder: " << encoder_count.load() << " (max reached)\n";
+                    }
                 } else {
-                    encoder_count--;
-                    std::cout << "Encoder: " << encoder_count.load() << " (CCW)\n";
+                    if (encoder_count > ENC_MIN) {
+                        encoder_count--;
+                        std::cout << "Encoder: " << encoder_count.load() << " (CCW)\n";
+                    } else {
+                        std::cout << "Encoder: " << encoder_count.load() << " (min reached)\n";
+                    }
                 }
             }
             last_clk_level = clk;
