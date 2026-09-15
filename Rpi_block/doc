@@ -11,7 +11,7 @@ https://www.boost.org/doc/libs/latest/libs/beast/doc/html/beast/quickref.html
 #include <unistd.h>
 
 
-pigpio python3-pigpio libpigpiod-if-dev libpigpiod-if2-1 // for buttons and rotary
+ python3-lgpio python3-gpiozero// for buttons and rotary
 
 
 
