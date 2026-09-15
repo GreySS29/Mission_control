@@ -11,36 +11,42 @@ const int ENC_CLK  = 5;
 const int ENC_DT   = 6;
 const int ENC_SW   = 13;
 
-int chip_handle;
-std::atomic<int> encoder_count{0};
-int last_clk_level = 1;
-
 const int ENC_MIN = -90;
 const int ENC_MAX = 90;
+const uint64_t DEBOUNCE_US = 3000; // 3 мс — можно подстроить
+
+int chip_handle;
+std::atomic<int> encoder_count{0};
+uint64_t last_tick = 0;
 
 void gpioCallback(int num_alerts, lgGpioAlert_p alerts, void *userdata) {
     for (int i = 0; i < num_alerts; i++) {
-        int gpio  = alerts[i].report.gpio;
-        int level = alerts[i].report.level;
+        int gpio       = alerts[i].report.gpio;
+        int level      = alerts[i].report.level;
+        uint64_t tick  = alerts[i].report.timestamp; // наносекунды
 
-       if (gpio == ENC_CLK) {
-    if (level != 1) continue;   
+        if (gpio == ENC_CLK) {
+            if (level != 1) continue; // только нарастающий фронт
 
-    int dt = lgGpioRead(chip_handle, ENC_DT);
+            // debounce: игнорируем, если слишком рано после прошлого события
+            if (tick - last_tick < DEBOUNCE_US * 1000ULL) continue;
+            last_tick = tick;
 
-    if (dt == 0) {
-        if (encoder_count < ENC_MAX) {
-            encoder_count++;
-            std::cout << "Encoder: " << encoder_count.load() << " (CW)\n";
+            int dt = lgGpioRead(chip_handle, ENC_DT);
+
+            if (dt == 0) {
+                if (encoder_count < ENC_MAX) {
+                    encoder_count++;
+                    std::cout << "Encoder: " << encoder_count.load() << " (CW)\n";
+                }
+            } else {
+                if (encoder_count > ENC_MIN) {
+                    encoder_count--;
+                    std::cout << "Encoder: " << encoder_count.load() << " (CCW)\n";
+                }
+            }
+            continue;
         }
-    } else {
-        if (encoder_count > ENC_MIN) {
-            encoder_count--;
-            std::cout << "Encoder: " << encoder_count.load() << " (CCW)\n";
-        }
-    }
-    continue;
-}
 
         if (level == 0) {
             std::cout << "Button on GPIO " << gpio << " pressed\n";
@@ -58,8 +64,8 @@ int main() {
     lgGpioClaimAlert(chip_handle, LG_SET_PULL_UP, LG_BOTH_EDGES, BTN1_PIN, -1);
     lgGpioClaimAlert(chip_handle, LG_SET_PULL_UP, LG_BOTH_EDGES, BTN2_PIN, -1);
     lgGpioClaimAlert(chip_handle, LG_SET_PULL_UP, LG_BOTH_EDGES, ENC_SW,  -1);
+    lgGpioClaimAlert(chip_handle, LG_SET_PULL_UP, LG_RISING_EDGE, ENC_CLK, -1);
     lgGpioClaimInput(chip_handle, LG_SET_PULL_UP, ENC_DT);
-    lgGpioClaimAlert(chip_handle, LG_SET_PULL_UP, LG_BOTH_EDGES, ENC_CLK, -1);
 
     lgGpioSetAlertsFunc(chip_handle, BTN1_PIN, gpioCallback, nullptr);
     lgGpioSetAlertsFunc(chip_handle, BTN2_PIN, gpioCallback, nullptr);
