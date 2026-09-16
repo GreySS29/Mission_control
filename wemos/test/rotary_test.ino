@@ -1,8 +1,8 @@
-#define ENCODER_CLK 14  // D5
-#define ENCODER_DT  12  // D6
+#define ENCODER_CLK 14 
+#define ENCODER_DT  12  
 
 int lastClkState = HIGH;
-long counter = 0;
+long angle = 0;
 
 const int ENC_MIN = -90;
 const int ENC_MAX = 90;
@@ -21,18 +21,18 @@ void loop() {
     if (clk == LOW) {
       int dt = digitalRead(ENCODER_DT);
       if (dt == HIGH) {
-        if(counter < ENC_MAX) {
-        counter+=5;
-        Serial.print("CW, count = ");
+        if(angle < ENC_MAX) {
+        angle+=5;
+        Serial.print("angle = ");
         }
       } else {
-        if(counter > ENC_MIN){
-        counter-=5;
-        Serial.print("CCW, count = ");
+        if(angle > ENC_MIN){
+        angle-=5;
+        Serial.print("angle = ");
         }
         
       }
-      Serial.println(counter);
+      Serial.println(angle);
     }
     lastClkState = clk;
   }
